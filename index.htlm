@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plan 🍻</title>
+  <style>
+    :root{
+      --bg1:#f2fff7;
+      --bg2:#fff6e9;
+      --card:#ffffff;
+      --text:#1f1f1f;
+      --muted:#666;
+      --yes:#1db954;   /* verde plan */
+      --no:#2f2f2f;
+      --shadow: 0 12px 40px rgba(0,0,0,.12);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: radial-gradient(1200px 800px at 20% 10%, var(--bg1), transparent 60%),
+                  radial-gradient(1200px 800px at 80% 90%, var(--bg2), transparent 60%),
+                  #fff;
+      overflow:hidden;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .wrap{ width:min(560px, 92vw); padding:18px; position:relative; }
+
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:26px 22px 20px;
+      text-align:center;
+      border:1px solid rgba(0,0,0,.06);
+    }
+
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(22px, 5vw, 34px);
+      letter-spacing:.2px;
+    }
+    p{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:clamp(14px, 3.4vw, 16px);
+      line-height:1.35;
+    }
+
+    .stage{
+      position:relative;
+      height:220px;
+      border-radius:18px;
+      background: rgba(29,185,84,.08);
+      border:1px dashed rgba(29,185,84,.35);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .btn{
+      border:0;
+      cursor:pointer;
+      padding:14px 18px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:16px;
+      transition: transform .12s ease, filter .12s ease;
+      touch-action: none;
+    }
+    .btn:active{ transform: scale(.98); }
+
+    #yes{
+      background:var(--yes);
+      color:white;
+      box-shadow: 0 14px 34px rgba(29,185,84,.30);
+      transform-origin:center;
+      position:relative;
+      z-index:2;
+    }
+
+    #no{
+      background:rgba(47,47,47,.08);
+      color:var(--no);
+      border:1px solid rgba(47,47,47,.18);
+      position:absolute;
+      left:62%;
+      top:58%;
+      transform: translate(-50%, -50%);
+      z-index:1;
+    }
+
+    .hint{
+      margin-top:12px;
+      font-size:12.5px;
+      color:rgba(0,0,0,.45);
+    }
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:50;
+      padding:18px;
+      text-align:center;
+    }
+    .overlay .box{
+      width:min(560px, 94vw);
+      background:white;
+      border-radius:26px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(0,0,0,.06);
+      padding:26px 20px;
+    }
+    .big{
+      font-size:clamp(24px, 6vw, 38px);
+      margin:0 0 10px;
+    }
+    .tiny{
+      margin:0;
+      color:rgba(0,0,0,.70);
+      font-size:clamp(14px, 3.6vw, 16px);
+      line-height:1.35;
+    }
+    .footer{
+      margin-top:16px;
+      font-size:12px;
+      color:rgba(0,0,0,.45);
+    }
+
+    /* confeti / burbujas tipo cerveza */
+    .bubble{
+      position:fixed;
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      background: rgba(255, 193, 7, .85); /* doradito */
+      left: 50%;
+      top: 50%;
+      pointer-events:none;
+      opacity:0;
+      animation: floatUp 1.7s ease forwards;
+      filter: drop-shadow(0 10px 18px rgba(255,193,7,.18));
+    }
+    @keyframes floatUp{
+      0%{ opacity:0; transform: translate(0,0) scale(.9); }
+      12%{ opacity:1; }
+      100%{ opacity:0; transform: translate(var(--dx), calc(-1 * var(--dy))) scale(1.25); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>¿Te jalas a unas chelas hoy? 🍻</h1>
+      <p>Plan tranquilo: cotorreo, risas y 1 (o 3) cheves. ¿Quién se apunta?</p>
+
+      <div class="stage" id="stage">
+        <button class="btn" id="yes">Sí, jalo 🍺</button>
+        <button class="btn" id="no">No puedo 😅</button>
+      </div>
+
+      <div class="hint">El “No puedo” anda bien ocupado… sospechoso 👀</div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="box">
+      <div class="big">¡Esoooo! 🍻😎</div>
+      <p class="tiny">
+        Queda oficial: <b>hoy se arma</b>.  
+        Manda este mensaje al grupo: “¿Dónde y a qué hora? 🍺”
+      </p>
+      <div class="footer">Toca en cualquier parte para cerrar</div>
+    </div>
+  </div>
+
+  <script>
+    const stage = document.getElementById("stage");
+    const yes = document.getElementById("yes");
+    const no = document.getElementById("no");
+    const overlay = document.getElementById("overlay");
+
+    let yesScale = 1;
+    let noDodges = 0;
+
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+    function stageRect(){ return stage.getBoundingClientRect(); }
+
+    function moveNo(aggressive=false){
+      const r = stageRect();
+      const pad = 14;
+      const noW = no.offsetWidth;
+      const noH = no.offsetHeight;
+
+      let x = Math.random() * (r.width - noW - pad*2) + pad;
+      let y = Math.random() * (r.height - noH - pad*2) + pad;
+
+      // evitar chocar con el Sí
+      const yesBox = yes.getBoundingClientRect();
+      const yesCx = yesBox.left + yesBox.width/2 - r.left;
+      const yesCy = yesBox.top + yesBox.height/2 - r.top;
+
+      const dx = x + noW/2 - yesCx;
+      const dy = y + noH/2 - yesCy;
+      const dist = Math.hypot(dx, dy);
+
+      if(dist < (aggressive ? 150 : 125)){
+        x = clamp(x + (dx >= 0 ? 130 : -130), pad, r.width - noW - pad);
+        y = clamp(y + (dy >= 0 ? 90 : -90), pad, r.height - noH - pad);
+      }
+
+      no.style.left = x + "px";
+      no.style.top = y + "px";
+      no.style.transform = "translate(0,0)";
+    }
+
+    function growYes(amount){
+      yesScale = clamp(yesScale + amount, 1, 3.2);
+      yes.style.transform = `scale(${yesScale})`;
+      yes.style.filter = `brightness(${clamp(1 + (yesScale-1)*0.10, 1, 1.22)})`;
+    }
+
+    function bubbles(n=10){
+      for(let i=0;i<n;i++){
+        const b = document.createElement("div");
+        b.className = "bubble";
+        const x = Math.random() * window.innerWidth;
+        const y = window.innerHeight + Math.random()*80;
+
+        const dx = (Math.random() * 260 - 130) + "px";
+        const dy = (420 + Math.random()*520) + "px";
+
+        b.style.left = x + "px";
+        b.style.top = y + "px";
+        b.style.setProperty("--dx", dx);
+        b.style.setProperty("--dy", dy);
+
+        document.body.appendChild(b);
+        setTimeout(()=> b.remove(), 1750);
+      }
+    }
+
+    // NO huye
+    no.addEventListener("mouseenter", () => {
+      noDodges++;
+      moveNo(noDodges > 3);
+      bubbles(5);
+    });
+
+    no.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      noDodges++;
+      moveNo(true);
+      bubbles(7);
+    });
+
+    // click en otro lado => crece el Sí
+    stage.addEventListener("pointerdown", (e) => {
+      if(e.target !== yes && e.target !== no){
+        growYes(0.10);
+        bubbles(6);
+      }
+    });
+
+    // si el dedo se acerca al NO en móvil, huye
+    stage.addEventListener("pointermove", (e) => {
+      const nb = no.getBoundingClientRect();
+      const px = e.clientX, py = e.clientY;
+      const cx = nb.left + nb.width/2;
+      const cy = nb.top + nb.height/2;
+      const dist = Math.hypot(px - cx, py - cy);
+      if(dist < 85){
+        noDodges++;
+        moveNo(noDodges > 2);
+      }
+    });
+
+    yes.addEventListener("click", () => {
+      overlay.style.display = "flex";
+      bubbles(26);
+      setTimeout(()=> bubbles(18), 220);
+      setTimeout(()=> bubbles(14), 520);
+    });
+
+    overlay.addEventListener("click", () => {
+      overlay.style.display = "none";
+    });
+
+    window.addEventListener("load", () => moveNo(false));
+    window.addEventListener("resize", () => moveNo(false));
+  </script>
+</body>
+</html>
